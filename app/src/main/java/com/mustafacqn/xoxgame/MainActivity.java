@@ -2,12 +2,17 @@ package com.mustafacqn.xoxgame;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.huawei.hms.jos.JosApps;
+import com.huawei.hms.jos.JosAppsClient;
+import com.huawei.hms.support.hwid.result.AuthHuaweiId;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -18,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int player1Points;
     private int player2Points;
     private TextView playerPointsTW;
+    private AuthHuaweiId huaweiId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initGame() {
+
+        init();
 
         playerPointsTW = findViewById(R.id.player_points);
 
@@ -125,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         playerPointsTW.setText("X " + player1Points + " - " + player2Points + " O");
     }
 
-
     private boolean checkForWin() {
         String [][] fields = new String [3][3];
 
@@ -160,5 +167,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         return false;
+    }
+
+    private void init() {
+        Intent intent = getIntent();
+        huaweiId = intent.getParcelableExtra("hw_account");
+        if (huaweiId != null) {
+            Toast.makeText(this, "Welcome " + huaweiId.getDisplayName(), Toast.LENGTH_SHORT).show();
+            JosAppsClient appsClient = JosApps.getJosAppsClient(this, huaweiId);
+            appsClient.init();
+        }
     }
 }
