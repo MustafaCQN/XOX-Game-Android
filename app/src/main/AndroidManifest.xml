@@ -20,6 +20,8 @@
 
         <activity android:name=".MainActivity" android:launchMode="singleTop"/>
 
+        <activity android:name=".achievements.Achievements" android:launchMode="singleTop" />
+
     </application>
 
 </manifest>

@@ -14,10 +14,12 @@ import com.huawei.hms.support.hwid.request.HuaweiIdAuthParams;
 import com.huawei.hms.support.hwid.request.HuaweiIdAuthParamsHelper;
 import com.huawei.hms.support.hwid.result.AuthHuaweiId;
 import com.huawei.hms.support.hwid.service.HuaweiIdAuthService;
+import com.mustafacqn.xoxgame.achievements.Achievements;
 
 public class Opening extends AppCompatActivity {
 
     private final int SIGN_IN_INTENT = 1002;
+    private final int ACHIEVEMENTS_INTENT = 1003;
     public HuaweiIdAuthService mAuthManager;
     public HuaweiIdAuthParams mAuthParam;
 
@@ -39,6 +41,10 @@ public class Opening extends AppCompatActivity {
         startActivityForResult(mAuthManager.getSignInIntent(), SIGN_IN_INTENT);
     }
 
+    public void achievementsClickHandler(View view) {
+        startActivityForResult(mAuthManager.getSignInIntent(), ACHIEVEMENTS_INTENT);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -47,6 +53,14 @@ public class Opening extends AppCompatActivity {
             if (authHuaweiIdTask.isSuccessful()){
                 AuthHuaweiId huaweiAccount = authHuaweiIdTask.getResult();
                 Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("hw_account", huaweiAccount);
+                startActivity(intent);
+            }
+        }else if (requestCode == ACHIEVEMENTS_INTENT) {
+            Task<AuthHuaweiId> authHuaweiIdTask = HuaweiIdAuthManager.parseAuthResultFromIntent(data);
+            if (authHuaweiIdTask.isSuccessful()){
+                AuthHuaweiId huaweiAccount = authHuaweiIdTask.getResult();
+                Intent intent = new Intent(this, Achievements.class);
                 intent.putExtra("hw_account", huaweiAccount);
                 startActivity(intent);
             }
